@@ -16,6 +16,7 @@ import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -30,9 +31,11 @@ import com.squareup.picasso.Picasso;
 import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.GregorianCalendar;
 
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
@@ -81,10 +84,37 @@ public class add_mobil  extends AppCompatActivity {
             }
         });
 
+        btn_camera.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openCamera();
+            }
+        });
+
+
+        thn_pembuatan.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
+            @Override
+            public void onSelectedDayChange(@NonNull CalendarView view, int year, int month, int dayOfMonth) {
+                tanggal = new GregorianCalendar(year, month, dayOfMonth).getTime();
+            }
+        });
+
+        btn_send.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+                String tanggalnya = formatter.format(tanggal);
+                // Toast.makeText(AddMovie.this,tanggalnya,Toast.LENGTH_LONG).show();
+                //addmovie(txt_Judul.getText().toString(),txt_Directby.getText().toString(),tanggalnya,spn_Rating.getSelectedItem().toString(),spn_Genre.getSelectedItem().toString(),txt_Writenby.getText().toString(),txt_Studio.getText().toString(),"img_btn1","img_btn2","img_btn3");
+                tambahmobil(spn_merk.getSelectedItem().toString(),txt_Cc.getText().toString(),tanggalnya,"img_btn3");
+
+                Intent intent = new Intent(add_mobil.this, MainActivity.class);
+                startActivity(intent);
+            }
+        });
 
 
         callmobil();
-
         spinerMerk();
 
     }
@@ -175,14 +205,14 @@ public class add_mobil  extends AppCompatActivity {
 
 
     //camera
-    private int CAMERA_REQUEST3 = 100;
+    private int CAMERA_REQUEST = 200;
     //gallery
     private int REQUEST_GALLERY = 100;
 
      void openCamera() {
 
          Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-      //   startActivityForResult(cameraIntent, CAMERA _REQUEST);
+        startActivityForResult(cameraIntent, CAMERA_REQUEST);
      }
 
     public void openFolder1() {
@@ -210,6 +240,14 @@ public class add_mobil  extends AppCompatActivity {
             byteArray = baos.toByteArray();
             // img_btn1.setImageBitmap(bitmap);
 
+        } else if (requestCode == CAMERA_REQUEST && resultCode == Activity.RESULT_OK) {
+            bitmap = (Bitmap) data.getExtras().get("data");
+
+
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 70, baos);
+            byteArray = baos.toByteArray();
+            img_mobil.setImageBitmap(bitmap);
         }
     }
 

@@ -44,7 +44,7 @@ public interface APIInterfacesRest {
     Call<AddModel> addkendaraan(
 
             @Part("merek_kendaraan") RequestBody spn_merk,
-            @Part("cc") RequestBody txt_cc,
+            @Part("cc") RequestBody txt_Cc,
             @Part("tahun_kendaraan") RequestBody thn_pembuatan,
             @Part MultipartBody.Part img_btn1
 
